@@ -1,0 +1,10 @@
+path_in: "internal/imageWork/files/in"
+path_out: "internal/imageWork/files/out"
+
+messages: 
+  responses:
+    start: "Отправьте фото как файл, чтобы я преобразовал его размер для стикеров :)"
+    default: "Я не понимаю ваш язык, только байты файлов :)"
+    default_command: "Я не знаю таких комманд"
+  errors:
+    send_not_file: "Пожалуйста отправьте файлом (без сжатия)"

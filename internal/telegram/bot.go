@@ -3,28 +3,39 @@ package telegram
 import (
 	"os"
 
+	"github.com/giicoo/telegramStickBot/internal/config"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
 )
 
 type APIBot struct {
 	bot *tgbotapi.BotAPI
+	cfg *config.Config
 }
 
-func NewBot(bot *tgbotapi.BotAPI) *APIBot {
+func NewBot(bot *tgbotapi.BotAPI, cfg *config.Config) *APIBot {
 	return &APIBot{
 		bot: bot,
+		cfg: cfg,
 	}
 }
 
 func (b *APIBot) Start() error {
 	logrus.Info("Authorized on account ", b.bot.Self.UserName)
 
-	os.MkdirAll("internal/images/files/in", os.ModePerm)
-	os.MkdirAll("internal/images/files/out", os.ModePerm)
+	err := os.MkdirAll(b.cfg.PathIn, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	err = os.MkdirAll(b.cfg.PathOut, os.ModePerm)
+	if err != nil {
+		return err
+	}
 
 	updates := b.initUpdateChannel()
-	b.checkingUpdates(updates)
+	if err = b.checkingUpdates(updates); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -40,12 +51,25 @@ func (b *APIBot) checkingUpdates(updates tgbotapi.UpdatesChannel) error {
 	for update := range updates {
 		if update.Message != nil { // If we got a message
 
-			if update.Message.IsCommand() { // check commands
-				b.hendlerCommads(update.Message)
+			// check commands
+			if update.Message.IsCommand() {
+				if err := b.handlerCommands(update.Message); err != nil {
+					return err
+				}
 				continue
 			}
 
-			b.hendlerMessages(update.Message) //check message
+			//check message
+			if update.Message.Text != "" {
+				if err := b.handlerDefault(update.Message); err != nil {
+					return err
+				}
+				continue
+			}
+
+			if err := b.handlerMessages(update.Message); err != nil {
+				return nil
+			}
 
 		}
 	}
