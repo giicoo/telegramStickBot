@@ -27,6 +27,7 @@ require (
 	github.com/sunshineplan/imgconv v1.1.4 // indirect
 	github.com/sunshineplan/pdf v1.0.5 // indirect
 	github.com/sunshineplan/tiff v0.0.0-20220128141034-29b9d69bd906 // indirect
+	github.com/yusukebe/go-pngquant v0.0.0-20200223090257-49b91f11b627 // indirect
 	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect

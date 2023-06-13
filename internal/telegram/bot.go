@@ -68,7 +68,7 @@ func (b *APIBot) checkingUpdates(updates tgbotapi.UpdatesChannel) error {
 			}
 
 			if err := b.handlerMessages(update.Message); err != nil {
-				return nil
+				return err
 			}
 
 		}
